@@ -72,7 +72,7 @@ describe Persistence::Rails do
     Post.find(new_post.id).title.should == 'a new title'
   end
 
-  it "should be valid" do
+  it "should not be valid" do
     post = Post.new
     post.valid?.should == false
   end
