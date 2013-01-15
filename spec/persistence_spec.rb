@@ -12,14 +12,15 @@ describe Persistence do
   end
 
   it "should include Persistence::Memory into class" do
-    Rails.stub(:env) { 'test' }
+    ENV['INHERIT_AR'] = 'memory'
     my_class.ancestors.should include(Persistence::Memory)
     my_class.ancestors.should_not include(Persistence::Rails)
   end
 
   it "should include Persistence::Rails into class" do
+    ENV['INHERIT_AR'] = 'rails'
     Rails.stub(:env) { 'development' }
-    my_class.ancestors.should include(Persistence::Rails)
-    my_class.ancestors.should_not include(Persistence::Memory)
+    ancestors = my_class.ancestors
+    ancestors.should include(Persistence::Rails)
   end
 end
