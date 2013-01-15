@@ -10,7 +10,7 @@ module Persistence
       klass.send :include, ActiveModel::Validations
     end
 
-    def initialize(attributes = {})
+    def initialize(attributes = {}, options = {})
       @attributes = attributes
     end
 
@@ -39,7 +39,6 @@ module Persistence
     end
 
     def method_missing(method_name, *args)
-      puts "#{method_name} not defined"
       if method_name.to_s =~ /[^=]=([^=]|$)/
         @attributes[method_name.to_s.gsub('=', '').to_sym]=args[0]
       else
@@ -84,7 +83,6 @@ module Persistence
       end
 
       def method_missing(method_name, *args)
-        puts "missing #{method_name}"
         if method_name.to_s =~ /find_by.*/
           attribute = method_name.to_s.gsub('find_by_', '')
           saved_entities.find { |entity|
