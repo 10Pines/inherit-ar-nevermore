@@ -99,17 +99,17 @@ module Persistence
         result
       end
 
-      def belongs_to(other_model)
+      def belongs_to(other_model, options = {})
       end
 
-      def has_one(other_model)
+      def has_one(other_model, options = {})
       end
 
-      def has_and_belongs_to_many(other_model)
+      def has_and_belongs_to_many(other_model, options = {})
         has_many(other_model)
       end
 
-      def has_many(other_model)
+      def has_many(other_model, options = {})
         relation_name = other_model.to_s.pluralize.to_sym
         has_many_associations << relation_name
         define_method(:lazy_initialize_association) do |relation_name|
