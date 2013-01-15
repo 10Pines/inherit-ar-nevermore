@@ -3,11 +3,30 @@ module Persistence
   class Relation
     def initialize(target_class)
       @target_class = target_class
-      @arel = Arel::Table.new(@target_class.class.name.tableize.to_sym)
+      @wheres = Array.new
+      @joins = Hash.new
     end
 
-    def where(expression)
-      @arel = @arel.where(expression)
+    def joins(another_model)
+      #@joins[another_model] = JoinCondition.new
+      self
+    end
+
+    def where(expression, *placeholders)
+      case expression
+      when Hash
+        expression.keys.each {|key|
+          if expression[key].is_a?(Array)
+            @wheres << InCondition.new(key, expression[key])
+          elsif expression[key].is_a?(Hash)
+            @wheres << JoinCondition.new(key, expression[key])
+          else
+            @wheres << BinaryCondition.equality(key, expression[key])
+          end
+        }
+      when String
+        @wheres << BinaryCondition.from_string(expression, placeholders)
+      end
       self
     end
 
@@ -20,14 +39,10 @@ module Persistence
     def run_query
       result = @target_class.instance_variable_get(:@saved_entities)
       result.select { |entity|
-        @arel.wheres.all? { |str_condition|
-          Condition.new(str_condition).evaluate(entity)
+        @wheres.all? { |condition|
+          condition.evaluate(entity)
         }
       }
-    end
-
-    def sanitize(condition)
-      condition.gsub('=', '==')
     end
   end
 end
