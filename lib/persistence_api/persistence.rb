@@ -10,6 +10,7 @@ module Persistence
       require File.dirname(__FILE__) + '/memory/memory_persistence'
       require File.dirname(__FILE__) + '/memory/relation'
       require File.dirname(__FILE__) + '/memory/condition'
+      require File.dirname(__FILE__) + '/memory/has_many_association'
       Persistence::Memory
     else
       require 'active_record'
