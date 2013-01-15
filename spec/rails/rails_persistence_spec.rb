@@ -1,5 +1,5 @@
+require 'active_record'
 require '../../lib/persistence_api/rails/rails_persistence'
-require 'active_record/connection_adapters/sqlite3_adapter'
 
 describe Persistence::Rails do
 
